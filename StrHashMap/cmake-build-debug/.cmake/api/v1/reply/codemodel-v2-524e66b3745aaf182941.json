@@ -49,8 +49,8 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "D:/ccpp_proj/Drivers/FileGuardKernel/StrHashMap/cmake-build-debug",
-		"source" : "D:/ccpp_proj/Drivers/FileGuardKernel/StrHashMap"
+		"build" : "D:/ccpp_proj/FileNodeIndex/StrHashMap/cmake-build-debug",
+		"source" : "D:/ccpp_proj/FileNodeIndex/StrHashMap"
 	},
 	"version" : 
 	{

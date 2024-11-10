@@ -3,7 +3,8 @@
 //NodeUnion
 
 NodeUnion::NodeUnion() {
-	NodeBufUnion = (_SC_CHR_TYPE*)calloc(5,sizeof(_SC_CHR_TYPE));
+	_SC_CHR_TYPE *strnew = new _SC_CHR_TYPE[5];
+	NodeBufUnion = strnew;
 	NodeBufUnion[0] = '|';
 	NodeBufUnion[1] = 0;
 	strsize = 5;
@@ -17,15 +18,13 @@ void NodeUnion::AddItem(const _SC_CHR_TYPE *NodeName) {
 	strsize+=len2;
 	char *strnew = new char[strsize];
 	sprintf(strnew,"%s%s|",NodeBufUnion,NodeName);
-	free(NodeBufUnion);
 	NodeBufUnion = strnew;
 #else
 	size_t len2 = wcslen(NodeName);
-        strsize+=len2;
-        wchar_t *strnew = new wchar_t[strsize];
-        swprintf(strnew,"%ls%ls|",NodeBufUnion,NodeName);
-        free(NodeBufUnion);
-        NodeBufUnion = strnew;
+	strsize+=len2;
+	wchar_t *strnew = new wchar_t[strsize];
+	swprintf(strnew,L"%ls%ls|",NodeBufUnion,NodeName);
+	NodeBufUnion = strnew;
 #endif
 }
 
@@ -36,18 +35,17 @@ int NodeUnion::isEmpty() {
 int NodeUnion::HaveNode(const _SC_CHR_TYPE *NodeName) {
 #ifdef DBG_ANSI
 	char TgStr[strlen(NodeName)+3];
-	sprintf(TgStr,"%s|",NodeName);
+	sprintf(TgStr,"|%s",NodeName);
 #else
 	wchar_t TgStr[wcslen(NodeName)+3];
 	swprintf(TgStr,L"%ls|",NodeName);
 #endif
-	return FindStr(NodeBufUnion,NodeName) == 0? 0 : 1 ;
-
+	return FindStr(NodeBufUnion,TgStr) == 0? 0 : 1 ;
 
 }
 
 NodeUnion::~NodeUnion() {
-	free(NodeBufUnion);
+	//free(NodeBufUnion);
 	strsize = 0;
 }
 
@@ -63,13 +61,14 @@ void FileRoot::AddItem(const _SC_CHR_TYPE *Path) {
 #ifdef DBG_ANSI
 	size_t totallen = strlen(Path);
 	char *nodemid = new char[totallen+2];
+	memset(nodemid,0,totallen+2);
 #else
 	size_t totallen = wcslen(Path);
 	wchar_t *nodemid = new wchar_t[totallen+2];
 #endif
 	size_t midind = 0,nodeind = 0;
 	for(size_t i =0;i<totallen;i++){
-		if(Path[i] == '\\'){
+		if(Path[i] == '\\'||Path[i]==0){
 			nodemid[midind] = 0;
 			midind=0;
 			if(nodemid[0] == 0) continue;
@@ -88,7 +87,7 @@ void FileRoot::AddItem(const _SC_CHR_TYPE *Path) {
 		}
 		nodemid[midind++] = Path[i];
 	}
-
+	nodes[nodeind].AddItem(nodemid);
 }
 
 FileRoot::~FileRoot() {
@@ -105,8 +104,8 @@ int FileRoot::HavePathOrSubPath(const _SC_CHR_TYPE *Path) {
 	wchar_t *nodemid = new wchar_t[totallen+2];
 #endif
 	size_t midind = 0,nodeind = 0;
-	for(size_t i =0;i<totallen;i++){
-		if(Path[i] == '\\'){
+	for(size_t i =0;i<totallen + 1;i++){
+		if(Path[i] == '\\' || Path[i] == 0){
 			nodemid[midind] = 0;
 			midind=0;
 			if(nodemid[0] == 0) continue;

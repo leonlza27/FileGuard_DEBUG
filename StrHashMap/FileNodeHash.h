@@ -20,7 +20,11 @@ typedef wchar_t _SC_CHR_TYPE;
 class NodeUnion{
 private:
 	//文件路径节点(集合,"|"连接)
-	_SC_CHR_TYPE* NodeBufUnion;
+#ifdef DBG_ANSI
+	char* NodeBufUnion;
+#else
+	wchar_t *NodeBufUnion;
+#endif
 	size_t strsize;
 public:
 	void AddItem(const _SC_CHR_TYPE *NodeName);

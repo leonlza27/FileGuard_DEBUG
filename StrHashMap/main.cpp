@@ -29,9 +29,12 @@ const char *ScanLst[] = {"C:\\Users\\leonl\\Desktop\\glog",
 
 int main() {
 	FileRoot Root;
-	Root.AddItem(ScanLst[0]);
-	Root.AddItem(ScanLst[4]);
-	printf("%d\n",Root.HavePathOrSubPath(ScanLst[2]));
-	printf("%d\n",Root.HavePathOrSubPath(ScanLst[5]));
+	for(int i =0;i<6;i++) {
+		Root.AddItem(Testbuf[i]);
+		printf("Add %s\n",Testbuf[i]);
+	}
+	for(int i =0;i<11;i++) {
+		printf("SCAN %s : %d\n",ScanLst[i],Root.HavePathOrSubPath(ScanLst[i]));
+	}
 	return 0;
 }

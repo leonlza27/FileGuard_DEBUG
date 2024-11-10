@@ -6,20 +6,26 @@ NodeUnion::NodeUnion() {
 	NodeBufUnion = (_SC_CHR_TYPE*)calloc(5,sizeof(_SC_CHR_TYPE));
 	NodeBufUnion[0] = '|';
 	NodeBufUnion[1] = 0;
-	strsize = 5 * sizeof(_SC_CHR_TYPE);
+	strsize = 5;
 }
 
 void NodeUnion::AddItem(const _SC_CHR_TYPE *NodeName) {
-	if(HaveNode(NodeName)) return;
-	size_t Strsize2 = sizeof(NodeName);
-	void* ret;
-	ret = realloc(NodeBufUnion,strsize+Strsize2-1);
-	strsize += Strsize2-1;
-	CatStr(NodeBufUnion,NodeName);
+	if(HaveNode(NodeName)) return; 
+       
 #ifdef DBG_ANSI
-	strcat(NodeBufUnion,"|");
+	size_t len2 = strlen(NodeName);
+	strsize+=len2;
+	char *strnew = new char[strsize];
+	sprintf(strnew,"%s%s|",NodeBufUnion,NodeName);
+	free(NodeBufUnion);
+	NodeBufUnion = strnew;
 #else
-	wcscat(NodeBufUnion,L"|");
+	size_t len2 = wcslen(NodeName);
+        strsize+=len2;
+        wchar_t *strnew = new wchar_t[strsize];
+        swprintf(strnew,"%ls%ls|",NodeBufUnion,NodeName);
+        free(NodeBufUnion);
+        NodeBufUnion = strnew;
 #endif
 }
 
